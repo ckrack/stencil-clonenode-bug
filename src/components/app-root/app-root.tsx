@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Element } from '@stencil/core';
 
 
 @Component({
@@ -8,6 +8,16 @@ import { Component, h } from '@stencil/core';
 })
 export class AppRoot {
 
+  @Element() el: HTMLElement;
+
+  componentDidLoad() {
+    let component = this.el.querySelector("my-component");
+    let cloned = component.cloneNode(true);
+    this.el.append(cloned);
+    component.message = 'Updated component';
+    (cloned as HTMLMyComponentElement).message = 'Cloned component';
+  }
+
   render() {
     return (
       <div>
@@ -16,12 +26,7 @@ export class AppRoot {
         </header>
 
         <main>
-          <stencil-router>
-            <stencil-route-switch scrollTopOffset={0}>
-              <stencil-route url='/' component='app-home' exact={true} />
-              <stencil-route url='/profile/:name' component='app-profile' />
-            </stencil-route-switch>
-          </stencil-router>
+          <slot/>
         </main>
       </div>
     );
